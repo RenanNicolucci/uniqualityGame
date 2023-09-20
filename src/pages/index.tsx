@@ -1,3 +1,4 @@
+import { questions } from "@/constants/questions";
 import Image from "next/image";
 import { useState } from "react";
 import { useSwipeable } from "react-swipeable";
@@ -15,7 +16,8 @@ const Index = () => {
     }
   };
 
-  const handleSwipe = (num: number) => {
+  const handleSwipe = (num: number, e: any) => {
+    console.log(e);
     const newIndex = imageDir + num;
     if (newIndex < 0) {
       return setImageDir(63);
@@ -27,8 +29,8 @@ const Index = () => {
   };
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => handleSwipe(1),
-    onSwipedRight: () => handleSwipe(-1),
+    onSwipedLeft: (e) => handleSwipe(1, e),
+    onSwipedRight: (e) => handleSwipe(-1, e),
   });
 
   return (
@@ -67,13 +69,33 @@ const Index = () => {
             />
           </div>
           <div>
-            <h1 className="text-center">
+            <h1 className="text-center text-[20px]">
               Assinale as alternativas conforme identificado nas imagens:
             </h1>
-            <div></div>
+            <form className="mt-[32px] flex flex-col gap-[16px] text-[16px]">
+              {questions.map((quest) => (
+                <div key={quest} className="flex items-center gap-[16px]">
+                  <input
+                    type="checkbox"
+                    className="w-[22px] h-[22px] text-blue-600 bg-[#bcd0ff] border-[transparent] rounded "
+                  />
+                  <label>{quest}</label>
+                </div>
+              ))}
+              <div>
+                <button className="w-full bg-[#1f36c7] text-white p-[8px] mt-[32px] rounded font-bold uppercase">
+                  Enviar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </main>
+      <footer className="bg-[#1f36c7] w-full p-[16px] mt-[32px]">
+        <div className="w-[40px] h-[40px] relative m-[auto]">
+          <Image src="/assets/logo.webp" alt="productImage" fill />
+        </div>
+      </footer>
     </>
   );
 };

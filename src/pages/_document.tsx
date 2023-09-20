@@ -8,7 +8,9 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang={AppConfig.locale}>
-        <Head />
+        <Head >
+          <title>Unilever | Treinamento</title>
+        </Head>
         <body>
           <Main />
           <NextScript />
