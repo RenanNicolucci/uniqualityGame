@@ -17,11 +17,11 @@ const Index = () => {
 
   const handleSwipe = (num: number) => {
     const newIndex = imageDir + num;
-    if(newIndex < 0 ){
-      return setImageDir(63)
+    if (newIndex < 0) {
+      return setImageDir(63);
     }
-    if( newIndex > 63){
-      return setImageDir(0)
+    if (newIndex > 63) {
+      return setImageDir(0);
     }
     setImageDir(newIndex);
   };
@@ -43,33 +43,34 @@ const Index = () => {
       <main>
         <div className="w-full p-[32px] flex items-center justify-center flex-col m-auto gap-[32px]">
           <div className="flex items-center">
-            <div>
-              <div {...handlers}>
-                  <div className="relative w-[300px] h-[300px]">
-                    <Image
-                      src={`/assets/product-01/02.RGB_color.0${leftZero(
-                        imageDir
-                      )}.webp`}
-                      alt="productImage"
-                      fill
-                      style={{ objectFit: "contain" }}
-                    />
-                  </div>
+            <div {...handlers}>
+              <div className="relative w-[300px] h-[300px]">
+                <Image
+                  src={`/assets/product-01/02.RGB_color.0${leftZero(
+                    imageDir
+                  )}.webp`}
+                  alt="productImage"
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
               </div>
             </div>
           </div>
           <div>
-            <form>
-              <h1 className="text-center">
-                Assinale as alternativas conforme identificado nas imagens:
-              </h1>
-              <select name="cars" id="cars" multiple>
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="opel">Opel</option>
-                <option value="audi">Audi</option>
-              </select>
-            </form>
+            <input
+              type="range"
+              min="0"
+              max="63"
+              id="myRange"
+              onChange={(e) => setImageDir(parseInt(e.target.value))}
+              className="h-1 bg-[#1f36c7] rounded-lg appearance-none cursor-pointer dark:[#1f36c7]"
+            />
+          </div>
+          <div>
+            <h1 className="text-center">
+              Assinale as alternativas conforme identificado nas imagens:
+            </h1>
+            <div></div>
           </div>
         </div>
       </main>
