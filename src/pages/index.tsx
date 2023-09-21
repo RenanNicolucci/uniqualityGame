@@ -1,13 +1,16 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { questions } from "@/constants/questions";
+import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { SwipeEventData, useSwipeable } from "react-swipeable";
 
 const Index = () => {
   const [imageDir, setImageDir] = useState(0);
   const [product, setProduct] = useState("1");
+  const { register, handleSubmit } = useForm();
 
   const leftZero = (num: number) => {
     if (num < 10) {
@@ -29,8 +32,8 @@ const Index = () => {
 
     if (newIndex < 0) {
       newIndex = 0;
-    } else if (newIndex > 63) {
-      newIndex = 63;
+    } else if (newIndex > 31) {
+      newIndex = 31;
     }
 
     setImageDir(newIndex);
@@ -40,6 +43,21 @@ const Index = () => {
     onSwipedLeft: (event) => handleSwipe(event),
     onSwipedRight: (event) => handleSwipe(event),
   });
+
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await axios.post("/api/answers", {
+        ...data,
+        product: parseInt(product),
+      });
+
+      if (response.status === 200) {
+        window.location.href = "/resultados";
+      }
+    } catch (error) {
+      console.error("Erro ao enviar a requisição:", error);
+    }
+  };
 
   useEffect(() => {
     const product = localStorage.getItem("product");
@@ -77,7 +95,7 @@ const Index = () => {
               <input
                 type="range"
                 min="0"
-                max="63"
+                max="31"
                 id="myRange"
                 onChange={(e) => setImageDir(parseInt(e.target.value))}
                 className="h-1 bg-[#1f36c7] rounded-lg appearance-none cursor-pointer dark:[#1f36c7]"
@@ -90,15 +108,19 @@ const Index = () => {
             <h1 className="text-center text-[20px]">
               Assinale as alternativas conforme for identificado nas imagens:
             </h1>
-            <form className="mt-[32px] flex flex-col gap-[16px] text-[16px]">
+            <form
+              className="mt-[32px] flex flex-col gap-[16px] text-[16px]"
+              onSubmit={handleSubmit(onSubmit)}
+            >
               <div className="flex flex-col gap-[16px] md:grid md:grid-cols-2">
                 {questions.map((quest) => (
-                  <div key={quest} className="flex items-center gap-[16px]">
+                  <div key={quest.key} className="flex items-center gap-[16px]">
                     <input
+                      {...register(quest.key)}
                       type="checkbox"
-                      className="w-[22px] h-[22px] text-blue-600 bg-[#bcd0ff] border-[transparent] rounded "
+                      className="w-[22px] h-[22px] text-blue-600 bg-[#bcd0ff] border-[transparent] rounded"
                     />
-                    <label>{quest}</label>
+                    <label>{quest.value}</label>
                   </div>
                 ))}
               </div>
