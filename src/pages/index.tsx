@@ -7,10 +7,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SwipeEventData, useSwipeable } from "react-swipeable";
 import { GoVideo } from "react-icons/go";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { Modal } from "@/components/Modal";
 
 const Index = () => {
   const [imageDir, setImageDir] = useState(0);
   const [product, setProduct] = useState("1");
+  const [videoModal, setVideoModal] = useState(false);
   const { register, handleSubmit } = useForm();
 
   const leftZero = (num: number) => {
@@ -31,6 +34,17 @@ const Index = () => {
 
     let newIndex = imageDir + deltaImageDir;
 
+    if (newIndex < 0) {
+      newIndex = 0;
+    } else if (newIndex > 31) {
+      newIndex = 31;
+    }
+
+    setImageDir(newIndex);
+  };
+
+  const handleArrow = (next?: boolean) => {
+    let newIndex = next ? imageDir - 1 : imageDir + 1;
     if (newIndex < 0) {
       newIndex = 0;
     } else if (newIndex > 31) {
@@ -78,9 +92,17 @@ const Index = () => {
       <main>
         <div className="w-full p-[32px] flex items-center justify-center flex-col m-auto gap-[32px] md:flex-row md:justify-center md:align-center md:gap-[64px]">
           <div className="flex items-center flex-col gap-[16px]">
-            <button className="bg-[#1f36c7] p-3 rounded text-white">
-              <GoVideo />
-            </button>
+            <div className="flex gap-[16px] items-center">
+              <button
+                className="bg-[#1f36c7] p-3 rounded text-white"
+                onClick={() => {
+                  setVideoModal(true);
+                }}
+              >
+                <GoVideo />
+              </button>
+              <p>Assistir Vídeo</p>
+            </div>
             <div className="flex items-center">
               <div {...handlers}>
                 <div className="relative w-[300px] h-[300px]">
@@ -95,7 +117,14 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div>
+            <div className="flex items-center justify-center gap-[8px]">
+              <button
+                onClick={() => {
+                  handleArrow(true);
+                }}
+              >
+                <IoIosArrowBack size={28} />
+              </button>
               <input
                 type="range"
                 min="0"
@@ -105,6 +134,9 @@ const Index = () => {
                 className="h-1 bg-[#1f36c7] rounded-lg appearance-none cursor-pointer dark:[#1f36c7]"
                 value={imageDir}
               />
+              <button onClick={() => handleArrow()}>
+                <IoIosArrowForward size={28} />
+              </button>
             </div>
           </div>
 
@@ -137,6 +169,17 @@ const Index = () => {
           </div>
         </div>
       </main>
+      {videoModal && (
+        <Modal
+          opened={videoModal}
+          setOpen={setVideoModal}
+          link={
+            product === "1"
+              ? "https://www.youtube.com/embed/fX9TtwfrxGc"
+              : "https://www.youtube.com/embed/14lwYeHfy7s"
+          }
+        />
+      )}
       <Footer />
     </>
   );
