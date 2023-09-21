@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SwipeEventData, useSwipeable } from "react-swipeable";
+import { GoVideo } from "react-icons/go";
 
 const Index = () => {
   const [imageDir, setImageDir] = useState(0);
@@ -77,6 +78,9 @@ const Index = () => {
       <main>
         <div className="w-full p-[32px] flex items-center justify-center flex-col m-auto gap-[32px] md:flex-row md:justify-center md:align-center md:gap-[64px]">
           <div className="flex items-center flex-col gap-[16px]">
+            <button className="bg-[#1f36c7] p-3 rounded text-white">
+              <GoVideo />
+            </button>
             <div className="flex items-center">
               <div {...handlers}>
                 <div className="relative w-[300px] h-[300px]">
