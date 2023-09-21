@@ -105,11 +105,15 @@ const Results = () => {
           <h1>Respostas:</h1>
         </div>
         <div className="md:flex md:justify-center gap-[64px] mb-[32px] flex-col md:flex-row">
-          <canvas className="max-w-[400px] max-h-[400px]" ref={chartRef01} />
-          <canvas
-            className="max-w-[400px] max-h-[400px] mt-[64px] md:mt-[0px]"
-            ref={chartRef02}
-          />
+          {product01Data.length > 0 && (
+            <canvas className="max-w-[400px] max-h-[400px]" ref={chartRef01} />
+          )}
+          {product02Data.length > 0 && (
+            <canvas
+              className="max-w-[400px] max-h-[400px] mt-[64px] md:mt-[0px]"
+              ref={chartRef02}
+            />
+          )}
         </div>
       </main>
       <Footer />
