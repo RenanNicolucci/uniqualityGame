@@ -1,17 +1,18 @@
-// pages/api/exemplo.js
-
-import db from "../../database/database";
+import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+
+const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    db.all("SELECT * FROM answers", (err: any, rows: any) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      return res.json(rows);
-    });
+    try {
+      const answers = await prisma.answers.findMany();
+      return res.json(answers);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
   }
+
   if (req.method === "POST") {
     const {
       codificacao,
@@ -48,34 +49,31 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       vazamentoSelagemVertical,
     };
 
-    db.serialize(() => {
-      db.run("BEGIN TRANSACTION");
-
-      Object.keys(updateValues).forEach((key: string) => {
+    await prisma.$transaction(async (prisma) => {
+      for (const key in updateValues) {
         //@ts-ignore
         if (updateValues[key]) {
-          db.run(
-            `UPDATE answers SET quantity = quantity + 1 WHERE product = ? AND key = ?`,
-            [product, key],
-            (err) => {
-              if (err) {
-                db.run("ROLLBACK");
-                return res.status(500).json({ error: err.message });
-              }
-            }
-          );
+          await prisma.answers.updateMany({
+            where: {
+              product,
+              key,
+            },
+            data: {
+              quantity: {
+                increment: 1,
+              },
+            },
+          });
         }
-      });
-
-      db.run("COMMIT", (err) => {
-        if (err) {
-          return res.status(500).json({ error: err.message });
-        }
-
-        return res
-          .status(200)
-          .json({ message: "Valores atualizados com sucesso." });
-      });
+      }
     });
+
+    try {
+      return res
+        .status(200)
+        .json({ message: "Valores atualizados com sucesso." });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
   }
 };
