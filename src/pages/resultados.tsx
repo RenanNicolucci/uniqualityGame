@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Chart from "chart.js/auto";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { questionsEnum } from "@/constants/questionsEnum";
 
 const Results = () => {
@@ -59,6 +60,18 @@ const Results = () => {
               ],
             },
           ],
+        },
+        plugins: [ChartDataLabels],
+        options: {
+          plugins: {
+            datalabels: {
+              color: "white",
+              font: {
+                weight: "bold",
+                size: 18,
+              },
+            },
+          },
         },
       });
     }
