@@ -106,6 +106,18 @@ const Results = () => {
             },
           ],
         },
+        plugins: [ChartDataLabels],
+        options: {
+          plugins: {
+            datalabels: {
+              color: "white",
+              font: {
+                weight: "bold",
+                size: 18,
+              },
+            },
+          },
+        },
       });
     }
   }, [product01Data]);
@@ -119,13 +131,22 @@ const Results = () => {
         </div>
         <div className="md:flex md:justify-center gap-[64px] mb-[32px] flex-col md:flex-row">
           {product01Data.length > 0 && (
-            <canvas className="max-w-[400px] max-h-[400px]" ref={chartRef01} />
+            <div className="flex flex-col justify-center">
+              <p className="text-center mb-[16px]">Omo Litro</p>
+              <canvas
+                className="max-w-[400px] max-h-[400px] min-w-[400px] min-h-[400px]"
+                ref={chartRef01}
+              />
+            </div>
           )}
           {product02Data.length > 0 && (
-            <canvas
-              className="max-w-[400px] max-h-[400px] mt-[64px] md:mt-[0px]"
-              ref={chartRef02}
-            />
+            <div className="flex flex-col justify-center">
+              <p className="text-center mb-[16px]">Omo Saco</p>
+              <canvas
+                className="max-w-[400px] max-h-[400px] min-w-[400px] min-h-[400px]"
+                ref={chartRef02}
+              />
+            </div>
           )}
         </div>
       </main>
