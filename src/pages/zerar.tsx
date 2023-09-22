@@ -7,10 +7,10 @@ const Zerar = () => {
     <>
       <Header />
       <main>
-        <div className="text-center my-[32px] text-[22px]">
+        <div className="text-center my-[64px] text-[22px]">
           <h1>Zerar treinamento</h1>
         </div>
-        <div className="md:flex md:justify-center gap-[64px] mb-[32px] flex-col md:flex-row min-h-[30vh]">
+        <div className="min-h-[30vh] w-full flex justify-center">
           <button
             className="w-full max-w-[320px] bg-[#1f36c7] max-h-[64px] text-white p-[8px] mt-[32px] rounded font-bold uppercase"
             onClick={async () => {
@@ -18,7 +18,7 @@ const Zerar = () => {
               window.location.href = "/";
             }}
           >
-            Enviar
+            Zerar Dados
           </button>
         </div>
       </main>
