@@ -175,8 +175,8 @@ const Index = () => {
           setOpen={setVideoModal}
           link={
             product === "1"
-              ? "https://www.youtube.com/embed/fX9TtwfrxGc"
-              : "https://www.youtube.com/embed/14lwYeHfy7s"
+              ? "https://www.youtube.com/embed/D5zAOc686-U"
+              : "https://www.youtube.com/embed/ZidRzkhaIV0"
           }
         />
       )}
