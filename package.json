@@ -22,7 +22,6 @@
     "@t3-oss/env-nextjs": "^0.6.1",
     "@vercel/postgres": "^0.4.2",
     "axios": "^1.5.0",
-    "chart.js": "^4.4.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "drizzle-orm": "^0.28.5",
     "next": "^13.4.19",
@@ -35,6 +34,7 @@
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.11.0",
     "react-swipeable": "^7.0.1",
+    "react-wordcloud": "^1.2.7",
     "sqlite3": "^5.1.6",
     "zod": "^3.22.2"
   },
