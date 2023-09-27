@@ -6,8 +6,8 @@ import { questionsEnum } from "@/constants/questionsEnum";
 import ReactWordcloud from "react-wordcloud";
 
 const Results = () => {
-  const [product01Data, setProduct01Data] = useState([]);
-  const [product02Data, setProduct02Data] = useState([]);
+  const [productData, setProductData] = useState([]);
+  const [productIndex, setProductIndex] = useState<string | undefined>();
 
   const options = {
     rotations: [1, 1],
@@ -17,34 +17,33 @@ const Results = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("/api/answers")
-      .then((response) => {
-        setProduct01Data(
-          response.data
-            .filter((item: any) => item.product === 1 && item.quantity > 0)
-            .map((item: any) => ({
-              //@ts-ignore
-              text: questionsEnum[item.key],
-              value: item.quantity,
-            }))
-        );
-        setProduct02Data(
-          response.data
-            .filter((item: any) => item.product === 2 && item.quantity > 0)
-            .map((item: any) => ({
-              //@ts-ignore
-              text: questionsEnum[item.key],
-              value: item.quantity,
-            }))
-        );
-      })
-      .catch((error) => {
-        console.error("Erro ao fazer a requisição:", error);
-      });
+    const product = localStorage.getItem("product");
+    setProductIndex(product || undefined);
   }, []);
 
-  console.log(product01Data);
+  useEffect(() => {
+    if (typeof productIndex === "string") {
+      axios
+        .get("/api/answers")
+        .then((response) => {
+          setProductData(
+            response.data
+              .filter(
+                (item: any) =>
+                  item.product === parseInt(productIndex) && item.quantity > 0
+              )
+              .map((item: any) => ({
+                //@ts-ignore
+                text: questionsEnum[item.key],
+                value: item.quantity,
+              }))
+          );
+        })
+        .catch((error) => {
+          console.error("Erro ao fazer a requisição:", error);
+        });
+    }
+  }, [productIndex]);
 
   return (
     <>
@@ -54,26 +53,15 @@ const Results = () => {
           <h1>Respostas:</h1>
         </div>
         <div className="md:flex md:justify-center gap-[64px] mb-[32px] flex-col md:flex-row">
-          {product01Data.length > 0 && (
+          {productData.length > 0 && (
             <div className="flex flex-col justify-center">
-              <p className="text-center mb-[16px]">Omo Litro</p>
+              <p className="text-center">
+                {productIndex === "1" ? "Omo Litro" : "Omo Pacote"}
+              </p>
               <div className="max-w-[400px] max-h-[400px] min-w-[400px] min-h-[400px]">
                 <ReactWordcloud
                   size={[400, 400]}
-                  words={product01Data}
-                  //@ts-ignore
-                  options={options}
-                />
-              </div>
-            </div>
-          )}
-          {product02Data.length > 0 && (
-            <div className="flex flex-col justify-center">
-              <p className="text-center mb-[16px]">Omo Saco</p>
-              <div className="max-w-[400px] max-h-[400px] min-w-[400px] min-h-[400px]">
-                <ReactWordcloud
-                  size={[400, 400]}
-                  words={product02Data}
+                  words={productData}
                   //@ts-ignore
                   options={options}
                 />
