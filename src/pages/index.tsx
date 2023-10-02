@@ -12,7 +12,7 @@ import { Modal } from "@/components/Modal";
 
 const Index = () => {
   const [imageDir, setImageDir] = useState(0);
-  const [product, setProduct] = useState("1");
+  const [product, setProduct] = useState("");
   const [videoModal, setVideoModal] = useState(false);
   const { register, handleSubmit } = useForm();
 
