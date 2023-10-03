@@ -3,17 +3,18 @@ import { Header } from "@/components/Header";
 import { questions } from "@/constants/questions";
 import axios from "axios";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { SwipeEventData, useSwipeable } from "react-swipeable";
 import { GoVideo } from "react-icons/go";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Modal } from "@/components/Modal";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const Index = () => {
+const Index = ({ product }: { product: string }) => {
   const [imageDir, setImageDir] = useState(0);
-  const [product, setProduct] = useState("");
   const [videoModal, setVideoModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
 
   const leftZero = (num: number) => {
@@ -61,30 +62,19 @@ const Index = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      setLoading(true);
       const response = await axios.post("/api/answers", {
         ...data,
         product: parseInt(product),
       });
 
       if (response.status === 200) {
-        window.location.href = "/resultados";
+        window.location.href = `/resultados/${product}`;
       }
     } catch (error) {
       console.error("Erro ao enviar a requisição:", error);
     }
   };
-
-  useEffect(() => {
-    const product = localStorage.getItem("product");
-
-    if (!product) {
-      const productNumber = (Math.floor(Math.random() * 2) + 1).toString();
-      localStorage.setItem("product", productNumber);
-      setProduct(productNumber);
-    } else {
-      setProduct(product);
-    }
-  }, []);
 
   return (
     <>
@@ -161,8 +151,13 @@ const Index = () => {
                 ))}
               </div>
               <div>
-                <button className="w-full bg-[#1f36c7] text-white p-[8px] mt-[32px] rounded font-bold uppercase">
-                  Enviar
+                <button className="w-full bg-[#1f36c7] text-white p-[8px] mt-[32px] rounded font-bold uppercase flex gap-[16px] justify-center items-center">
+                  Enviar{" "}
+                  {loading && (
+                    <div className="animate-spin">
+                      <AiOutlineLoading3Quarters />
+                    </div>
+                  )}
                 </button>
               </div>
             </form>
@@ -184,5 +179,13 @@ const Index = () => {
     </>
   );
 };
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      product: (Math.floor(Math.random() * 2) + 1).toString(),
+    },
+  };
+}
 
 export default Index;
