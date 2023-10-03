@@ -41,19 +41,19 @@ const ResultId = ({
               <p className="text-center">
                 {id === "1" ? "Omo Litro" : "Omo Pacote"}
               </p>
-              <div className="max-w-[400px] max-h-[250px] min-w-[400px] min-h-[250px]">
+              <div className="max-w-[360px] max-h-[250px] min-w-[360px] min-h-[250px]">
                 {show && (
                   <ReactWordcloud
-                    size={[400, 250]}
+                    size={[360, 250]}
                     words={data}
                     //@ts-ignore
                     options={options}
                   />
                 )}
               </div>
-              <div>
+              <div className="mx-[auto] min-w-[340px]">
                 <button
-                  className="w-full bg-[#1f36c7] text-white p-[8px] my-[64px] rounded font-bold uppercase"
+                  className="w-full bg-[#1f36c7] text-white p-[8px] my-[64px] rounded font-bold uppercase max-w-[340px] mx-[auto]"
                   onClick={() => {
                     router.push(`/`);
                   }}
