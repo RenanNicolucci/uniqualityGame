@@ -1,27 +1,36 @@
 import axios from 'axios';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { useMutation } from 'react-query';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 
 const Index = () => {
-  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<{ name: string }>();
 
+  const createUser = async ({ name }: { name: string }) => {
+    return axios.post('/api/user', { name });
+  };
+
+  const { mutate, isLoading } = useMutation('createUserMutation', createUser);
+
   const onSubmit = async (data: { name: string }) => {
     const { name } = data;
     try {
-      setLoading(true);
-      const response = await axios.post('/api/user', { name });
-      if (response.status === 200) {
-        window.location.href = `/perguntas`;
-      }
+      mutate(
+        { name },
+        {
+          onSuccess: (response) => {
+            window.location.href = `/perguntas`;
+            localStorage.setItem('userId', response.data.id);
+          },
+        },
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Erro ao enviar a requisição:', error);
@@ -58,7 +67,7 @@ const Index = () => {
                 className="mt-[32px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
               >
                 Entrar
-                {loading && (
+                {isLoading && (
                   <div className="animate-spin">
                     <AiOutlineLoading3Quarters />
                   </div>

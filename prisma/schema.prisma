@@ -12,16 +12,14 @@ model User {
   id      Int       @id @default(autoincrement())
   name    String
   Answers Answers[]
-  time    String
   createdAt DateTime @default(now())
 }
 
 model Answers {
   id       Int     @id @default(autoincrement())
   key      String
-  quantity Int
   product  Int
   userId   Int
   user     User    @relation(fields: [userId], references: [id])
-  wrong    Boolean
+  value    Boolean
 }

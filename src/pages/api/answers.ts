@@ -3,6 +3,22 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
+interface IBody {
+  codificacao: boolean;
+  codificacaoFalhada: boolean;
+  contrarotuloDiferenteDoRotulo: boolean;
+  embalagemFurada: boolean;
+  faltaDeCodificacao: boolean;
+  rotuloComBolhas: boolean;
+  rotuloDescolado: boolean;
+  tampaDeslocada: boolean;
+  vazamento: boolean;
+  vazamentoSelagemHorizontal: boolean;
+  vazamentoSelagemVertical: boolean;
+  product: string;
+  userId: string;
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export, consistent-return
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
@@ -28,7 +44,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       vazamentoSelagemHorizontal,
       vazamentoSelagemVertical,
       product,
-    } = req.body;
+      userId,
+    }: IBody = req.body;
 
     if (!product) {
       return res
@@ -36,7 +53,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ error: "Campo 'product' obrigatório não preenchido." });
     }
 
-    const updateValues = {
+    const newData = Object.keys({
       codificacao,
       codificacaoFalhada,
       contrarotuloDiferenteDoRotulo,
@@ -48,30 +65,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       vazamento,
       vazamentoSelagemHorizontal,
       vazamentoSelagemVertical,
-    };
-
-    await prisma.$transaction(async (data) => {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const key in updateValues) {
-        // @ts-ignore
-        if (updateValues[key]) {
-          // eslint-disable-next-line no-await-in-loop
-          await data.answers.updateMany({
-            where: {
-              product,
-              key,
-            },
-            data: {
-              quantity: {
-                increment: 1,
-              },
-            },
-          });
-        }
-      }
-    });
+    }).map((key) => ({
+      key,
+      product: parseInt(product, 10),
+      userId: parseInt(userId, 10),
+      value: req.body[key] as boolean,
+    }));
 
     try {
+      await prisma.answers.createMany({
+        data: newData,
+      });
       return res
         .status(200)
         .json({ message: 'Valores atualizados com sucesso.' });
@@ -82,11 +86,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === 'DELETE') {
     try {
-      await prisma.answers.updateMany({
-        data: {
-          quantity: 0,
-        },
-      });
+      await prisma.answers.deleteMany({});
 
       return res.status(200).json({
         message: 'Quantidade zerada com sucesso para todos os produtos.',

@@ -1,27 +1,53 @@
 import axios from 'axios';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { useMutation } from 'react-query';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { questions } from '@/constants/questions';
 
+const sketchfabList = [
+  {
+    src: 'https://sketchfab.com/models/c3de7f8b092e4092aef14d4ffc9fac7f/embed',
+  },
+  {
+    src: 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed',
+  },
+  {
+    src: 'https://sketchfab.com/models/c3de7f8b092e4092aef14d4ffc9fac7f/embed',
+  },
+  {
+    src: 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed',
+  },
+];
+
 const Perguntas = ({ product }: { product: string }) => {
-  const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
+
+  const createAnswer = async (data: any) => {
+    return axios.post('/api/answers', {
+      ...data,
+      product: parseInt(product, 10),
+    });
+  };
+
+  const { mutate, isLoading } = useMutation(
+    'createAnswerMutation',
+    createAnswer,
+  );
 
   const onSubmit = async (data: any) => {
     try {
-      setLoading(true);
-      const response = await axios.post('/api/answers', {
-        ...data,
-        product: parseInt(product, 10),
-      });
-
-      if (response.status === 200) {
-        window.location.href = `/resultados/${product}`;
-      }
+      const userId = localStorage.getItem('userId') || '';
+      mutate(
+        { ...data, userId },
+        {
+          onSuccess: () => {
+            window.location.href = `/resultados/${product}`;
+          },
+        },
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Erro ao enviar a requisição:', error);
@@ -42,11 +68,7 @@ const Perguntas = ({ product }: { product: string }) => {
                       className="h-full w-full"
                       title="Shinobi Frog"
                       allow="autoplay; fullscreen; xr-spatial-tracking"
-                      src={
-                        product === '1'
-                          ? 'https://sketchfab.com/models/c3de7f8b092e4092aef14d4ffc9fac7f/embed'
-                          : 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed'
-                      }
+                      src={sketchfabList[parseInt(product, 10)]?.src}
                     />
                   </div>
                 </div>
@@ -79,7 +101,7 @@ const Perguntas = ({ product }: { product: string }) => {
                   className="mt-[32px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] font-bold uppercase text-white"
                 >
                   Enviar
-                  {loading && (
+                  {isLoading && (
                     <div className="animate-spin">
                       <AiOutlineLoading3Quarters />
                     </div>
@@ -98,7 +120,7 @@ const Perguntas = ({ product }: { product: string }) => {
 export async function getServerSideProps() {
   return {
     props: {
-      product: (Math.floor(Math.random() * 2) + 1).toString(),
+      product: Math.floor(Math.random() * 4).toString(),
     },
   };
 }
