@@ -53,6 +53,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ error: "Campo 'product' obrigatório não preenchido." });
     }
 
+    const hasData = await prisma.answers.findMany({
+      where: {
+        userId: parseInt(userId, 10),
+        product: parseInt(product, 10),
+      },
+    });
+
+    if (hasData.length) {
+      return res.status(500).json({
+        error: 'Usuário já possui respostas cadastradas para este produto',
+      });
+    }
+
     const newData = Object.keys({
       codificacao,
       codificacaoFalhada,

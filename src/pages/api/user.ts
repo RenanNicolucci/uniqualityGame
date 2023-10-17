@@ -30,4 +30,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(500).json({ error: error.message });
     }
   }
+
+  if (req.method === 'DELETE') {
+    try {
+      await prisma.user.deleteMany({});
+
+      return res.status(200).json({
+        message: 'Quantidade zerada com sucesso para todos os usuarios.',
+      });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
 };

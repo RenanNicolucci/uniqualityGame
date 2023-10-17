@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
@@ -15,15 +17,16 @@ const sketchfabList = [
     src: 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed',
   },
   {
-    src: 'https://sketchfab.com/models/c3de7f8b092e4092aef14d4ffc9fac7f/embed',
+    src: 'https://sketchfab.com/models/1611833f3eaa41bbba2b6944269429ab/embed',
   },
   {
-    src: 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed',
+    src: 'https://sketchfab.com/models/00beb4f7241e496e8a2ebb47fdb4f93c/embed',
   },
 ];
 
 const Perguntas = ({ product }: { product: string }) => {
   const { register, handleSubmit } = useForm();
+  const router = useRouter();
 
   const createAnswer = async (data: any) => {
     return axios.post('/api/answers', {
@@ -38,20 +41,19 @@ const Perguntas = ({ product }: { product: string }) => {
   );
 
   const onSubmit = async (data: any) => {
-    try {
-      const userId = localStorage.getItem('userId') || '';
-      mutate(
-        { ...data, userId },
-        {
-          onSuccess: () => {
-            window.location.href = `/resultados/${product}`;
-          },
+    const userId = localStorage.getItem('userId') || '';
+    mutate(
+      { ...data, userId },
+      {
+        onSuccess: () => {
+          localStorage.setItem('product', product);
+          router.push(`${product}/gabarito/`);
         },
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao enviar a requisição:', error);
-    }
+        onError: (err: any) => {
+          toast.error(err.response.data.error || 'erro ao enviar respostas!');
+        },
+      },
+    );
   };
 
   return (
@@ -68,7 +70,7 @@ const Perguntas = ({ product }: { product: string }) => {
                       className="h-full w-full"
                       title="Shinobi Frog"
                       allow="autoplay; fullscreen; xr-spatial-tracking"
-                      src={sketchfabList[parseInt(product, 10)]?.src}
+                      src={sketchfabList[parseInt(product, 10) - 1]?.src}
                     />
                   </div>
                 </div>
@@ -120,7 +122,7 @@ const Perguntas = ({ product }: { product: string }) => {
 export async function getServerSideProps() {
   return {
     props: {
-      product: Math.floor(Math.random() * 4).toString(),
+      product: (Math.floor(Math.random() * 4) + 1).toString(),
     },
   };
 }

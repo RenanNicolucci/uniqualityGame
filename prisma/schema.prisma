@@ -9,17 +9,24 @@ datasource db {
 }
 
 model User {
-  id      Int       @id @default(autoincrement())
-  name    String
-  Answers Answers[]
-  createdAt DateTime @default(now())
+  id        Int       @id @default(autoincrement())
+  name      String
+  Answers   Answers[]
+  createdAt DateTime  @default(now())
 }
 
 model Answers {
+  id           Int            @id @default(autoincrement())
+  key          String
+  product      Int
+  userId       Int
+  user         User           @relation(fields: [userId], references: [id])
+  value        Boolean
+  createdAt    DateTime       @default(now())
+}
+
+model CorrectAnswers {
   id       Int     @id @default(autoincrement())
-  key      String
   product  Int
-  userId   Int
-  user     User    @relation(fields: [userId], references: [id])
-  value    Boolean
+  answerValue String
 }

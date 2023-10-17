@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
@@ -12,6 +14,7 @@ const Index = () => {
     register,
     formState: { errors },
   } = useForm<{ name: string }>();
+  const router = useRouter();
 
   const createUser = async ({ name }: { name: string }) => {
     return axios.post('/api/user', { name });
@@ -21,20 +24,19 @@ const Index = () => {
 
   const onSubmit = async (data: { name: string }) => {
     const { name } = data;
-    try {
-      mutate(
-        { name },
-        {
-          onSuccess: (response) => {
-            window.location.href = `/perguntas`;
-            localStorage.setItem('userId', response.data.id);
-          },
+
+    mutate(
+      { name },
+      {
+        onSuccess: (response) => {
+          router.push('/perguntas');
+          localStorage.setItem('userId', response.data.id);
         },
-      );
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Erro ao enviar a requisição:', error);
-    }
+        onError: () => {
+          toast.error('Algo de errado aconteceu ao criar o usuário');
+        },
+      },
+    );
   };
 
   return (
