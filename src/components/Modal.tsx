@@ -1,27 +1,28 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { IoMdClose } from "react-icons/io";
+import type { Dispatch, SetStateAction } from 'react';
+import { useEffect } from 'react';
+import { IoMdClose } from 'react-icons/io';
 
 export const Modal = ({
   opened,
   setOpen,
-  link
+  link,
 }: {
   opened: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  link: string
+  link: string;
 }) => {
   useEffect(() => {
     if (opened) {
-      document.body.classList.add("disable-scroll");
+      document.body.classList.add('disable-scroll');
     } else {
-      document.body.classList.remove("disable-scroll");
+      document.body.classList.remove('disable-scroll');
     }
   }, [opened]);
 
   return (
     <div
-      className={`z-[1000] fixed bg-[#07070799] top-[0] left-[0] w-full h-[100vh] flex items-center justify-center ${
-        opened ? "" : "hidden"
+      className={`fixed left-[0] top-[0] z-[1000] flex h-[100vh] w-full items-center justify-center bg-[#07070799] ${
+        opened ? '' : 'hidden'
       }`}
     >
       <div className="flex gap-[16px]">
@@ -31,9 +32,10 @@ export const Modal = ({
           src={link}
           title="litrão"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        ></iframe>
+        />
         <button
-          className="p-[16px] bg-[blue] text-white h-[54px] rounded"
+          type="button"
+          className="h-[54px] rounded bg-[blue] p-[16px] text-white"
           onClick={() => {
             setOpen(false);
           }}

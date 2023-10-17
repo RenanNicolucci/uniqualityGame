@@ -1,21 +1,23 @@
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import axios from "axios";
+import axios from 'axios';
+
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
 
 const Zerar = () => {
   return (
     <>
       <Header />
       <main>
-        <div className="text-center my-[64px] text-[22px]">
+        <div className="my-[64px] text-center text-[22px]">
           <h1>Zerar treinamento</h1>
         </div>
-        <div className="min-h-[30vh] w-full flex justify-center">
+        <div className="flex min-h-[30vh] w-full justify-center">
           <button
-            className="w-full max-w-[320px] bg-[#1f36c7] max-h-[64px] text-white p-[8px] mt-[32px] rounded font-bold uppercase"
+            type="button"
+            className="mt-[32px] max-h-[64px] w-full max-w-[320px] rounded bg-[#1f36c7] p-[8px] font-bold uppercase text-white"
             onClick={async () => {
-              await axios.delete("/api/answers");
-              window.location.href = "/";
+              await axios.delete('/api/answers');
+              window.location.href = '/';
             }}
           >
             Zerar Dados

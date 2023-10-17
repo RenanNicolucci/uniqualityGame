@@ -1,78 +1,30 @@
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import { questions } from "@/constants/questions";
-import axios from "axios";
-import Image from "next/image";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { SwipeEventData, useSwipeable } from "react-swipeable";
-import { GoVideo } from "react-icons/go";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { Modal } from "@/components/Modal";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import axios from 'axios';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
+import { questions } from '@/constants/questions';
 
 const Index = ({ product }: { product: string }) => {
-  const [imageDir, setImageDir] = useState(0);
-  const [videoModal, setVideoModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
-
-  const leftZero = (num: number) => {
-    if (num < 10) {
-      return `00${num}`;
-    } else if (num < 100) {
-      return `0${num}`;
-    } else {
-      return num.toString();
-    }
-  };
-
-  const handleSwipe = (e: SwipeEventData) => {
-    const swipeForce = e.deltaX;
-    const sensitivity = 0.1;
-
-    const deltaImageDir = Math.round(swipeForce * sensitivity);
-
-    let newIndex = imageDir + deltaImageDir;
-
-    if (newIndex < 0) {
-      newIndex = 0;
-    } else if (newIndex > 31) {
-      newIndex = 31;
-    }
-
-    setImageDir(newIndex);
-  };
-
-  const handleArrow = (next?: boolean) => {
-    let newIndex = next ? imageDir - 1 : imageDir + 1;
-    if (newIndex < 0) {
-      newIndex = 0;
-    } else if (newIndex > 31) {
-      newIndex = 31;
-    }
-
-    setImageDir(newIndex);
-  };
-
-  const handlers = useSwipeable({
-    onSwipedLeft: (event) => handleSwipe(event),
-    onSwipedRight: (event) => handleSwipe(event),
-  });
 
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
-      const response = await axios.post("/api/answers", {
+      const response = await axios.post('/api/answers', {
         ...data,
-        product: parseInt(product),
+        product: parseInt(product, 10),
       });
 
       if (response.status === 200) {
         window.location.href = `/resultados/${product}`;
       }
     } catch (error) {
-      console.error("Erro ao enviar a requisição:", error);
+      // eslint-disable-next-line no-console
+      console.error('Erro ao enviar a requisição:', error);
     }
   };
 
@@ -80,56 +32,27 @@ const Index = ({ product }: { product: string }) => {
     <>
       <Header />
       <main>
-        <div className="w-full p-[32px] flex items-center justify-center flex-col m-auto gap-[32px] md:flex-row md:justify-center md:align-center md:gap-[64px]">
-          <div className="flex items-center flex-col gap-[16px]">
-            <div className="flex gap-[16px] items-center">
-              <button
-                className="bg-[#1f36c7] p-3 rounded text-white"
-                onClick={() => {
-                  setVideoModal(true);
-                }}
-              >
-                <GoVideo />
-              </button>
-              <p>Assistir Vídeo</p>
-            </div>
+        <div className="m-auto flex w-full flex-col items-center justify-center gap-[32px] p-[32px] md:flex-row md:items-center md:justify-center md:gap-[64px]">
+          <div className="flex flex-col items-center gap-[16px]">
             <div className="flex items-center">
-              <div {...handlers}>
-                <div className="relative w-[300px] h-[300px]">
-                  <Image
-                    src={`/assets/product-0${product}/02.RGB_color.0${leftZero(
-                      imageDir
-                    )}.webp`}
-                    alt="productImage"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
+              <div>
+                <div className="relative h-[400px] w-full md:w-[400px]">
+                  <div className="h-full w-full">
+                    <iframe
+                      className="h-full w-full"
+                      title="Shinobi Frog"
+                      allow="autoplay; fullscreen; xr-spatial-tracking"
+                      src={
+                        product === '1'
+                          ? 'https://sketchfab.com/models/c3de7f8b092e4092aef14d4ffc9fac7f/embed'
+                          : 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed'
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-[8px]">
-              <button
-                onClick={() => {
-                  handleArrow(true);
-                }}
-              >
-                <IoIosArrowBack size={28} />
-              </button>
-              <input
-                type="range"
-                min="0"
-                max="31"
-                id="myRange"
-                onChange={(e) => setImageDir(parseInt(e.target.value))}
-                className="h-1 bg-[#1f36c7] rounded-lg appearance-none cursor-pointer dark:[#1f36c7]"
-                value={imageDir}
-              />
-              <button onClick={() => handleArrow()}>
-                <IoIosArrowForward size={28} />
-              </button>
-            </div>
           </div>
-
           <div>
             <h1 className="text-center text-[20px]">
               Assinale as alternativas conforme for identificado nas imagens:
@@ -144,15 +67,18 @@ const Index = ({ product }: { product: string }) => {
                     <input
                       {...register(quest.key)}
                       type="checkbox"
-                      className="w-[22px] h-[22px] text-blue-600 bg-[#bcd0ff] border-[transparent] rounded"
+                      className="h-[22px] w-[22px] rounded border-[transparent] bg-[#bcd0ff] text-blue-600"
                     />
-                    <label>{quest.value}</label>
+                    <label htmlFor={quest.key}>{quest.value}</label>
                   </div>
                 ))}
               </div>
               <div>
-                <button className="w-full bg-[#1f36c7] text-white p-[8px] mt-[32px] rounded font-bold uppercase flex gap-[16px] justify-center items-center">
-                  Enviar{" "}
+                <button
+                  type="submit"
+                  className="mt-[32px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] font-bold uppercase text-white"
+                >
+                  Enviar
                   {loading && (
                     <div className="animate-spin">
                       <AiOutlineLoading3Quarters />
@@ -164,17 +90,6 @@ const Index = ({ product }: { product: string }) => {
           </div>
         </div>
       </main>
-      {videoModal && (
-        <Modal
-          opened={videoModal}
-          setOpen={setVideoModal}
-          link={
-            product === "1"
-              ? "https://www.youtube.com/embed/D5zAOc686-U"
-              : "https://www.youtube.com/embed/ZidRzkhaIV0"
-          }
-        />
-      )}
       <Footer />
     </>
   );

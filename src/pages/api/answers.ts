@@ -1,10 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from '@prisma/client';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const prisma = new PrismaClient();
 
+// eslint-disable-next-line import/no-anonymous-default-export, consistent-return
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     try {
       const answers = await prisma.answers.findMany();
       return res.json(answers);
@@ -13,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     const {
       codificacao,
       codificacaoFalhada,
@@ -49,11 +50,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       vazamentoSelagemVertical,
     };
 
-    await prisma.$transaction(async (prisma) => {
+    await prisma.$transaction(async (data) => {
+      // eslint-disable-next-line no-restricted-syntax
       for (const key in updateValues) {
-        //@ts-ignore
+        // @ts-ignore
         if (updateValues[key]) {
-          await prisma.answers.updateMany({
+          // eslint-disable-next-line no-await-in-loop
+          await data.answers.updateMany({
             where: {
               product,
               key,
@@ -71,13 +74,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       return res
         .status(200)
-        .json({ message: "Valores atualizados com sucesso." });
+        .json({ message: 'Valores atualizados com sucesso.' });
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
   }
 
-  if (req.method === "DELETE") {
+  if (req.method === 'DELETE') {
     try {
       await prisma.answers.updateMany({
         data: {
@@ -85,11 +88,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      return res
-        .status(200)
-        .json({
-          message: "Quantidade zerada com sucesso para todos os produtos.",
-        });
+      return res.status(200).json({
+        message: 'Quantidade zerada com sucesso para todos os produtos.',
+      });
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }
