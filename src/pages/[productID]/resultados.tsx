@@ -74,7 +74,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/answers/${productID}`,
+      `https://unilever-nine.vercel.app/api/answers/${productID}`,
     );
     const formatedResponse = response.data.map((item: any) => ({
       // @ts-ignore
