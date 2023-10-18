@@ -56,7 +56,13 @@ const Index = () => {
               </label>
               <input
                 id="name"
-                {...register('name', { required: 'Esse campo é necessário' })}
+                {...register('name', {
+                  required: 'Esse campo é necessário',
+                  maxLength: {
+                    value: 12,
+                    message: 'Nome muito grande!',
+                  },
+                })}
                 className="border-[1px] border-solid border-[#535353] px-[16px] py-[8px]"
               />
               {errors.name && (

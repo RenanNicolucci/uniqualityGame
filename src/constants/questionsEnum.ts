@@ -1,5 +1,5 @@
 export enum QuestionsEnum {
-  vazamentoSelagemHorizontal = 'Vazameno Selagem Horizontal',
+  vazamentoSelagemHorizontal = 'Vazamento Selagem Horizontal',
   vazamentoSelagemVertical = 'Vazamento Selagem Vertical',
   codificacao = 'Codificação',
   rotuloDescolado = 'Rótulo Descolado',
