@@ -59,7 +59,7 @@ const Index = () => {
                 {...register('name', {
                   required: 'Esse campo é necessário',
                   maxLength: {
-                    value: 12,
+                    value: 22,
                     message: 'Nome muito grande!',
                   },
                 })}

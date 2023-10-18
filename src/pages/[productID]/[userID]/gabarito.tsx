@@ -116,6 +116,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const correctAnswers = await axios.get(
       `http://localhost:3000/api/answers/correctAnswers/${productID}`,
     );
+
     return {
       props: {
         data: { ...response.data, correctAnswersByDB: correctAnswers.data },

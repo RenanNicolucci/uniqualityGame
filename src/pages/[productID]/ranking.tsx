@@ -1,11 +1,15 @@
 import axios from 'axios';
 import type { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 
 const Ranking = (data: any) => {
+  const route = useRouter();
+  const { productID } = route.query;
+
   return (
     <>
       <Header />
@@ -33,6 +37,9 @@ const Ranking = (data: any) => {
               <div>
                 <button
                   type="button"
+                  onClick={() => {
+                    route.push(`/${productID}/resultados`);
+                  }}
                   className="mt-[22px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
                 >
                   Visualizar Palavras
@@ -52,7 +59,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/ranking/${productID}`,
+      `https://unilever-nine.vercel.app/api/ranking/${productID}`,
     );
 
     return {

@@ -6,16 +6,14 @@ import ReactWordcloud from 'react-wordcloud';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { QuestionsEnum } from '@/constants/questionsEnum';
 
-const ResultId = ({
-  id,
-  data,
-}: {
-  id: string;
-  data: { text: string; value: number }[];
-}) => {
+const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
   const [show, setShow] = useState(false);
   const router = useRouter();
+  const { productID } = router.query;
+
+  const names = ['Omo Litro', 'Omo Pacote', 'Cif', 'Comfort'];
 
   const options = {
     rotations: [1, 1],
@@ -38,8 +36,8 @@ const ResultId = ({
         <div className="mb-[32px] flex-col gap-[64px] md:flex md:flex-row md:justify-center">
           {data.length > 0 && (
             <div className="flex flex-col justify-center">
-              <p className="text-center">
-                {id === '1' ? 'Omo Litro' : 'Omo Pacote'}
+              <p className="mb-[32px] text-center text-[18px]">
+                {names[parseInt(productID as string, 10) - 1]}
               </p>
               <div className="max-h-[250px] min-h-[250px] min-w-[360px] max-w-[360px]">
                 {show && (
@@ -72,28 +70,41 @@ const ResultId = ({
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { id } = context.query;
-  const formatedId = id as string;
+  const { productID } = context.query;
 
   try {
     const response = await axios.get(
-      'https://unilever-nine.vercel.app/api/answers',
+      `http://localhost:3000/api/answers/${productID}`,
     );
-    const formatedResponse = response.data
-      .filter(
-        (item: any) =>
-          item.product === parseInt(formatedId, 10) && item.quantity > 0,
-      )
-      .map((item: any) => ({
-        // @ts-ignore
-        text: questionsEnum[item.key],
-        value: item.quantity,
-      }));
+    const formatedResponse = response.data.map((item: any) => ({
+      // @ts-ignore
+      text: QuestionsEnum[item.key],
+      value: item.value,
+    }));
+
+    const groupedData: any = {};
+
+    // Iterate through the data and group by 'text'
+    formatedResponse.forEach((item: any) => {
+      const { text, value } = item;
+      if (!groupedData[text]) {
+        groupedData[text] = 0;
+      }
+
+      if (value) {
+        // eslint-disable-next-line no-plusplus
+        groupedData[text]++;
+      }
+    });
+
+    const data = Object.keys(groupedData).map((item: any) => ({
+      text: item,
+      value: groupedData[item],
+    }));
 
     return {
       props: {
-        id: formatedId,
-        data: formatedResponse as { text: string; value: number }[],
+        data: data as { text: string; value: number }[],
       },
     };
   } catch (error) {
