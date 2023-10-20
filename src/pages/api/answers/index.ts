@@ -81,9 +81,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       userId: parseInt(userId, 10),
       value: req.body[key] as boolean,
     }));
-
-    console.log(newData)
-
     try {
       await prisma.answers.createMany({
         data: newData,
