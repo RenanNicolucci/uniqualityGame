@@ -9,8 +9,7 @@ interface IBody {
   contrarotuloDiferenteDoRotulo: boolean;
   embalagemFurada: boolean;
   faltaDeCodificacao: boolean;
-  rotuloComBolhas: boolean;
-  rotuloDescolado: boolean;
+  rotulo: boolean;
   tampaDeslocada: boolean;
   vazamento: boolean;
   vazamentoSelagemHorizontal: boolean;
@@ -37,8 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       contrarotuloDiferenteDoRotulo,
       embalagemFurada,
       faltaDeCodificacao,
-      rotuloComBolhas,
-      rotuloDescolado,
+      rotulo,
       tampaDeslocada,
       vazamento,
       vazamentoSelagemHorizontal,
@@ -72,8 +70,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       contrarotuloDiferenteDoRotulo,
       embalagemFurada,
       faltaDeCodificacao,
-      rotuloComBolhas,
-      rotuloDescolado,
+      rotulo,
       tampaDeslocada,
       vazamento,
       vazamentoSelagemHorizontal,
@@ -84,6 +81,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       userId: parseInt(userId, 10),
       value: req.body[key] as boolean,
     }));
+
+    console.log(newData)
 
     try {
       await prisma.answers.createMany({
