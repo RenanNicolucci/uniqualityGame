@@ -101,7 +101,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         (ranking) => ranking.user.id === parseInt(userID as string, 10),
       );
       const indexRanking = sortByRanking.indexOf(sortByRankingUser[0] as any);
-
       return res.json({ ...sortByRankingUser[0], position: indexRanking });
     } catch (error: any) {
       return res.status(500).json({ error: error.message });

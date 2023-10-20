@@ -59,7 +59,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const response = await axios.get(
-      `https://unilever-nine.vercel.app/api/ranking/${productID}`,
+      `${process.env.PROJECT_URL}api/ranking/${productID}`,
     );
 
     return {

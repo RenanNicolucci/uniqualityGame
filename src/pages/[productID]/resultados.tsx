@@ -74,14 +74,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const response = await axios.get(
-      `https://unilever-nine.vercel.app/api/answers/${productID}`,
+      `${process.env.PROJECT_URL}api/answers/${productID}`,
     );
     const formatedResponse = response.data.map((item: any) => ({
       // @ts-ignore
       text: QuestionsEnum[item.key],
       value: item.value,
     }));
-
     const groupedData: any = {};
 
     // Iterate through the data and group by 'text'
