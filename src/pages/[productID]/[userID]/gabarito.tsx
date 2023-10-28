@@ -5,14 +5,11 @@ import React from 'react';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
-import { QuestionsEnum } from '@/constants/questionsEnum';
 
 const Gabarito = ({
   data: {
     position,
     correctAnswers,
-    wrongAnswers,
-    correctAnswersByDB,
     user: { name },
   },
 }: any) => {
@@ -34,57 +31,6 @@ const Gabarito = ({
                 <p className="text-[#076607]">Acertou:</p>
                 <p>{`${correctAnswers?.length || 0}/3`}</p>
               </div>
-              <div className="flex w-full items-center justify-between">
-                <p className="text-[#d10f09]">Errou:</p>
-                <p>{`${wrongAnswers?.length || 0}`}</p>
-              </div>
-              <div className="mt-[32px]">
-                <p>Respostas corretas do produto:</p>
-                <div className="mt-[16px] flex flex-col gap-[16px]">
-                  {correctAnswersByDB.map(
-                    (answer: {
-                      answerValue: typeof QuestionsEnum;
-                      id: number;
-                    }) => (
-                      <div
-                        key={answer.id}
-                        className="flex items-center justify-between"
-                      >
-                        {/* @ts-ignore */}
-                        <p>{QuestionsEnum[answer.answerValue]}</p>
-                        <p className="text-[#076607]">verdadeiro</p>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </div>
-              {wrongAnswers.length ? (
-                <div className="mt-[32px]">
-                  <p>Suas respostas incorretas:</p>
-                  <div className="mt-[16px] flex flex-col gap-[16px]">
-                    {wrongAnswers.map(
-                      (answer: {
-                        key: typeof QuestionsEnum;
-                        id: number;
-                        value: boolean;
-                      }) => (
-                        <div
-                          key={answer.id}
-                          className="flex items-center justify-between"
-                        >
-                          {/* @ts-ignore */}
-                          <p>{QuestionsEnum[answer.key]}</p>
-                          {answer.value ? (
-                            <p className="text-[#076607]">verdadeiro</p>
-                          ) : (
-                            <p className="text-[#d10f09]">falso</p>
-                          )}
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              ) : null}
               <div>
                 <button
                   type="button"

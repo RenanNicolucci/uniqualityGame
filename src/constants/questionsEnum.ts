@@ -1,10 +1,10 @@
 export enum QuestionsEnum {
   vazamentoSelagemHorizontal = 'Vazamento Selagem Horizontal',
   vazamentoSelagemVertical = 'Vazamento Selagem Vertical',
+  frascoAmassado = 'Frasco Amassado',
+  tampaQuebrada = 'Tampa Quebrada',
   codificacao = 'Codificação',
   rotulo = 'Rótulo',
-  codificacaoFalhada = 'Codificação Falhada',
-  faltaDeCodificacao = 'Falta de Codificação',
   tampaDeslocada = 'Tampa Deslocada',
   vazamento = 'Vazamento',
   embalagemFurada = 'Embalagem Furada',

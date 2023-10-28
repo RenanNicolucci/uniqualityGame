@@ -7,12 +7,7 @@ const prisma = new PrismaClient();
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     try {
-      const { productID } = req.query;
-
       const answersByUser = await prisma.answers.findMany({
-        where: {
-          product: parseInt(productID as string, 10),
-        },
         include: {
           user: true,
         },
@@ -36,13 +31,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         answersByUserFormatted[userId].answers.push(answer);
       }
 
-      const correctAnswers = (
-        await prisma.correctAnswers.findMany({
-          where: {
-            product: parseInt(productID as string, 10),
-          },
-        })
-      ).map((answer) => answer.answerValue);
+      const correctAnswers = (await prisma.correctAnswers.findMany()).map(
+        (answer) => answer.answerValue,
+      );
 
       const formattedResults = Object.values(answersByUserFormatted).map(
         (result: any) => {

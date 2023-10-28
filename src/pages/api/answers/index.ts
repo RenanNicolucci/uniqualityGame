@@ -5,10 +5,8 @@ const prisma = new PrismaClient();
 
 interface IBody {
   codificacao: boolean;
-  codificacaoFalhada: boolean;
   contrarotuloDiferenteDoRotulo: boolean;
   embalagemFurada: boolean;
-  faltaDeCodificacao: boolean;
   rotulo: boolean;
   tampaDeslocada: boolean;
   vazamento: boolean;
@@ -32,10 +30,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const {
       codificacao,
-      codificacaoFalhada,
       contrarotuloDiferenteDoRotulo,
       embalagemFurada,
-      faltaDeCodificacao,
       rotulo,
       tampaDeslocada,
       vazamento,
@@ -66,10 +62,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const newData = Object.keys({
       codificacao,
-      codificacaoFalhada,
       contrarotuloDiferenteDoRotulo,
       embalagemFurada,
-      faltaDeCodificacao,
       rotulo,
       tampaDeslocada,
       vazamento,
