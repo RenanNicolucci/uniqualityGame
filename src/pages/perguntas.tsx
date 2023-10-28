@@ -11,16 +11,16 @@ import { questions } from '@/constants/questions';
 
 const sketchfabList = [
   {
-    src: 'https://sketchfab.com/models/c3de7f8b092e4092aef14d4ffc9fac7f/embed',
+    src: 'https://sketchfab.com/models/dcbe8b322b3e44638a93566b2ce0217c/embed',
   },
   {
-    src: 'https://sketchfab.com/models/8bc5f4b31d414908846f2464ce6876dd/embed',
+    src: 'https://sketchfab.com/models/7c145211c94e472f932300d2720638f6/embed',
   },
   {
-    src: 'https://sketchfab.com/models/1611833f3eaa41bbba2b6944269429ab/embed',
+    src: 'https://sketchfab.com/models/9f4e40823dc3489a82cc04ecec14d252/embed',
   },
   {
-    src: 'https://sketchfab.com/models/00beb4f7241e496e8a2ebb47fdb4f93c/embed',
+    src: 'https://sketchfab.com/models/3e21d67ecac94b8691ae90d356186d51/embed',
   },
 ];
 
