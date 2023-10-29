@@ -6,7 +6,6 @@ import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 
 const Ranking = (data: any) => {
-
   return (
     <>
       <Header />
