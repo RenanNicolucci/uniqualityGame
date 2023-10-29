@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       const answersByUser = await prisma.answers.findMany({
         where: {
-          product: parseInt(productID as string, 10),
+          productId: parseInt(productID as string, 10),
         },
         include: {
           user: true,
@@ -39,7 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const correctAnswers = (
         await prisma.correctAnswers.findMany({
           where: {
-            product: parseInt(productID as string, 10),
+            productId: parseInt(productID as string, 10),
           },
         })
       ).map((answer) => answer.answerValue);
@@ -53,18 +53,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             correctAnswers: result.answers
               .filter((answer: any) => {
                 return correctAnswers.includes(answer.key) && answer.value;
-              })
-              .map((item: any) => ({
-                key: item.key,
-                product: item.product,
-                value: item.value,
-              })),
-            wrongAnswers: result.answers
-              .filter((answer: any) => {
-                return (
-                  (!correctAnswers.includes(answer.key) && answer.value) ||
-                  (correctAnswers.includes(answer.key) && !answer.value)
-                );
               })
               .map((item: any) => ({
                 key: item.key,

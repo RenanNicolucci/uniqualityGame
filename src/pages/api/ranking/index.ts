@@ -10,6 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const allAnswers = await prisma.answers.findMany({
         include: {
           user: true,
+          product: true,
         },
         orderBy: {
           userId: 'asc',
@@ -24,46 +25,42 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!answersByUser[userId]) {
           answersByUser[userId] = {
             user: answer.user,
+            product: answer.product,
             answers: [],
           };
         }
 
         answersByUser[userId].answers.push(answer);
       }
+      const formattedResults = await Promise.all(
+        Object.values(answersByUser).map(async (result: any) => {
+          const correctAnswerKeys = await prisma.correctAnswers
+            .findMany({
+              where: {
+                productId: result.product.id,
+              },
+            })
+            .then((correctAnswers) =>
+              correctAnswers.map((answer) => answer.answerValue),
+            );
 
-      const correctAnswers = (await prisma.correctAnswers.findMany()).map(
-        (answer) => answer.answerValue,
-      );
+          const filteredAnswers = result.answers
+            .filter((answer: any) => {
+              return correctAnswerKeys.includes(answer.key) && answer.value;
+            })
+            .map((item: any) => ({
+              key: item.key,
+              product: item.product,
+              value: item.value,
+            }));
 
-      const formattedResults = Object.values(answersByUser).map(
-        (result: any) => {
           return {
             user: { name: result.user.name, id: result.user.id },
             startTime: result.user.createdAt,
             finalTime: result.answers[0].createdAt,
-            correctAnswers: result.answers
-              .filter((answer: any) => {
-                return correctAnswers.includes(answer.key) && answer.value;
-              })
-              .map((item: any) => ({
-                key: item.key,
-                product: item.product,
-                value: item.value,
-              })),
-            wrongAnswers: result.answers
-              .filter((answer: any) => {
-                return (
-                  (!correctAnswers.includes(answer.key) && answer.value) ||
-                  (correctAnswers.includes(answer.key) && !answer.value)
-                );
-              })
-              .map((item: any) => ({
-                key: item.key,
-                product: item.product,
-                value: item.value,
-              })),
+            correctAnswers: filteredAnswers,
           };
-        },
+        }),
       );
 
       const sortByRanking = formattedResults.sort((a, b) => {

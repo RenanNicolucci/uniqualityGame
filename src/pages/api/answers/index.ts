@@ -10,6 +10,8 @@ interface IBody {
   rotulo: boolean;
   tampaDeslocada: boolean;
   vazamento: boolean;
+  frascoAmassado: boolean;
+  tampaQuebrada: boolean;
   vazamentoSelagemHorizontal: boolean;
   vazamentoSelagemVertical: boolean;
   product: string;
@@ -29,14 +31,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === 'POST') {
     const {
+      vazamentoSelagemHorizontal,
+      vazamentoSelagemVertical,
+      frascoAmassado,
+      tampaQuebrada,
       codificacao,
-      contrarotuloDiferenteDoRotulo,
-      embalagemFurada,
       rotulo,
       tampaDeslocada,
       vazamento,
-      vazamentoSelagemHorizontal,
-      vazamentoSelagemVertical,
+      embalagemFurada,
+      contrarotuloDiferenteDoRotulo,
       product,
       userId,
     }: IBody = req.body;
@@ -50,7 +54,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const hasData = await prisma.answers.findMany({
       where: {
         userId: parseInt(userId, 10),
-        product: parseInt(product, 10),
+        productId: parseInt(product, 10),
       },
     });
 
@@ -60,25 +64,48 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
 
-    const newData = Object.keys({
+    const allKeys = Object.keys({
       codificacao,
       contrarotuloDiferenteDoRotulo,
       embalagemFurada,
       rotulo,
       tampaDeslocada,
+      frascoAmassado,
+      tampaQuebrada,
       vazamento,
       vazamentoSelagemHorizontal,
       vazamentoSelagemVertical,
-    }).map((key) => ({
+    });
+
+    const answerData = allKeys.map((key) => ({
       key,
-      product: parseInt(product, 10),
+      productId: parseInt(product, 10),
       userId: parseInt(userId, 10),
       value: req.body[key] as boolean,
     }));
+
+    const countValues = allKeys
+      .map((item) => ({
+        key: item,
+        value: req.body[item],
+      }))
+      .filter((item) => item.value)
+      .map((item) => item.key);
+
     try {
       await prisma.answers.createMany({
-        data: newData,
+        data: answerData,
       });
+
+      await prisma.floatAnswers.updateMany({
+        where: {
+          answerValue: {
+            in: countValues,
+          },
+        },
+        data: { quantity: { increment: 1 } },
+      });
+
       return res
         .status(200)
         .json({ message: 'Valores atualizados com sucesso.' });

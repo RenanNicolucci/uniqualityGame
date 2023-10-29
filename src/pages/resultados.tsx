@@ -5,7 +5,6 @@ import ReactWordcloud from 'react-wordcloud';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
-import { QuestionsEnum } from '@/constants/questionsEnum';
 
 const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
   const [show, setShow] = useState(false);
@@ -70,30 +69,13 @@ const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
 
 export async function getServerSideProps() {
   try {
-    const response = await axios.get(`${process.env.PROJECT_URL}api/answers`);
-    const formatedResponse = response.data.map((item: any) => ({
-      // @ts-ignore
-      text: QuestionsEnum[item.key],
-      value: item.value,
-    }));
-    const groupedData: any = {};
+    const response = await axios.get(
+      `${process.env.PROJECT_URL}api/floatAnswers`,
+    );
 
-    // Iterate through the data and group by 'text'
-    formatedResponse.forEach((item: any) => {
-      const { text, value } = item;
-      if (!groupedData[text]) {
-        groupedData[text] = 0;
-      }
-
-      if (value) {
-        // eslint-disable-next-line no-plusplus
-        groupedData[text]++;
-      }
-    });
-
-    const data = Object.keys(groupedData).map((item: any) => ({
-      text: item,
-      value: groupedData[item],
+    const data = response.data.map((item: any) => ({
+      text: item.answerValue,
+      value: item.quantity,
     }));
 
     return {

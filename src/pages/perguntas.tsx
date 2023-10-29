@@ -1,3 +1,4 @@
+import type { Product } from '@prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -9,29 +10,14 @@ import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { questions } from '@/constants/questions';
 
-const sketchfabList = [
-  {
-    src: 'https://sketchfab.com/models/dcbe8b322b3e44638a93566b2ce0217c/embed',
-  },
-  {
-    src: 'https://sketchfab.com/models/7c145211c94e472f932300d2720638f6/embed',
-  },
-  {
-    src: 'https://sketchfab.com/models/9f4e40823dc3489a82cc04ecec14d252/embed',
-  },
-  {
-    src: 'https://sketchfab.com/models/3e21d67ecac94b8691ae90d356186d51/embed',
-  },
-];
-
-const Perguntas = ({ product }: { product: string }) => {
+const Perguntas = ({ product }: { product: Product }) => {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
 
   const createAnswer = async (data: any) => {
     return axios.post('/api/answers', {
       ...data,
-      product: parseInt(product, 10),
+      product: product.id,
     });
   };
 
@@ -46,8 +32,8 @@ const Perguntas = ({ product }: { product: string }) => {
       { ...data, userId },
       {
         onSuccess: () => {
-          localStorage.setItem('product', product);
-          router.push(`${product}/${userId}/gabarito/`);
+          localStorage.setItem('product', data);
+          router.push(`${product.id}/${userId}/gabarito/`);
         },
         onError: (err: any) => {
           toast.error(err.response.data.error || 'erro ao enviar respostas!');
@@ -70,7 +56,7 @@ const Perguntas = ({ product }: { product: string }) => {
                       className="h-full w-full"
                       title="Shinobi Frog"
                       allow="autoplay; fullscreen; xr-spatial-tracking"
-                      src={sketchfabList[parseInt(product, 10) - 1]?.src}
+                      src={product.sketchfab}
                     />
                   </div>
                 </div>
@@ -120,11 +106,19 @@ const Perguntas = ({ product }: { product: string }) => {
 };
 
 export async function getServerSideProps() {
-  return {
-    props: {
-      product: (Math.floor(Math.random() * 4) + 1).toString(),
-    },
-  };
+  try {
+    const response = await axios.get(`${process.env.PROJECT_URL}api/products`);
+
+    return {
+      props: {
+        product: response.data[Math.floor(Math.random() * 4)],
+      },
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 }
 
 export default Perguntas;

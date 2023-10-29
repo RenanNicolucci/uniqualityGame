@@ -5,16 +5,13 @@ const prisma = new PrismaClient();
 
 // eslint-disable-next-line import/no-anonymous-default-export, consistent-return
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'GET') {
-    const { productID } = req.query;
-
+  if (req.method === 'DELETE') {
     try {
-      const answers = await prisma.correctAnswers.findMany({
-        where: {
-          productId: parseInt(productID as string, 10),
-        },
+      await prisma.floatAnswers.deleteMany({});
+
+      return res.status(200).json({
+        message: 'Quantidade zerada com sucesso para todas as palavras.',
       });
-      return res.json(answers);
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }

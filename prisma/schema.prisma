@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -14,18 +14,35 @@ model User {
   createdAt DateTime  @default(now())
 }
 
-model Answers {
-  id           Int            @id @default(autoincrement())
-  key          String
-  product      Int
-  userId       Int
-  user         User           @relation(fields: [userId], references: [id])
-  value        Boolean
-  createdAt    DateTime       @default(now())
+model Product {
+  id             Int              @id @default(autoincrement())
+  name           String
+  sketchfab      String
+  correctAnswers CorrectAnswers[]
+  Answers        Answers[]
 }
 
 model CorrectAnswers {
-  id       Int     @id @default(autoincrement())
-  product  Int
+  id          Int    @id @default(autoincrement())
   answerValue String
+
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId Int?
+}
+
+model Answers {
+  id        Int      @id @default(autoincrement())
+  key       String
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  value     Boolean
+  createdAt DateTime @default(now())
+  productId Int      @default(1)
+}
+
+model FloatAnswers {
+  id          Int    @id @default(autoincrement())
+  answerValue String
+  quantity    Int
 }
