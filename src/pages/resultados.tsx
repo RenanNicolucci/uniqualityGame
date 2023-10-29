@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import ReactWordcloud from 'react-wordcloud';
@@ -69,7 +68,7 @@ const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps() {
   try {
     const response = await axios.get(`${process.env.PROJECT_URL}api/answers`);
     const formatedResponse = response.data.map((item: any) => ({
