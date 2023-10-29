@@ -43,7 +43,7 @@ const Zerar = () => {
               router.push('/');
             }}
           >
-            Zerar Rankin
+            Zerar Ranking
             {isLoadingRanking && (
               <div className="animate-spin">
                 <AiOutlineLoading3Quarters />
