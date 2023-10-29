@@ -1,14 +1,11 @@
 import axios from 'axios';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 
 const Ranking = (data: any) => {
-  const route = useRouter();
-  const { productID } = route.query;
 
   return (
     <>
