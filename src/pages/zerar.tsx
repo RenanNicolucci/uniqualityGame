@@ -22,7 +22,7 @@ const Zerar = () => {
               router.push('/');
             }}
           >
-            Zerar Dados
+            Zerar Ranking
           </button>
         </div>
       </main>

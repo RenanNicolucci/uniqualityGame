@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     try {
-      const answersByUser = await prisma.answers.findMany({
+      const allAnswers = await prisma.answers.findMany({
         include: {
           user: true,
         },
@@ -16,26 +16,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      const answersByUserFormatted: any = {};
+      const answersByUser: any = {};
 
-      for (const answer of answersByUser) {
+      for (const answer of allAnswers) {
         const userId = answer.user.id;
 
-        if (!answersByUserFormatted[userId]) {
-          answersByUserFormatted[userId] = {
+        if (!answersByUser[userId]) {
+          answersByUser[userId] = {
             user: answer.user,
             answers: [],
           };
         }
 
-        answersByUserFormatted[userId].answers.push(answer);
+        answersByUser[userId].answers.push(answer);
       }
 
       const correctAnswers = (await prisma.correctAnswers.findMany()).map(
         (answer) => answer.answerValue,
       );
 
-      const formattedResults = Object.values(answersByUserFormatted).map(
+      const formattedResults = Object.values(answersByUser).map(
         (result: any) => {
           return {
             user: { name: result.user.name, id: result.user.id },

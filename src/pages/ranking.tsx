@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { GetServerSidePropsContext } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -35,15 +35,12 @@ const Ranking = (data: any) => {
                 ))}
               </table>
               <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    route.push(`/${productID}/resultados`);
-                  }}
+                <Link
+                  href="/resultados"
                   className="mt-[22px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
                 >
                   Visualizar Palavras
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -54,13 +51,9 @@ const Ranking = (data: any) => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { productID } = context.query;
-
+export async function getServerSideProps() {
   try {
-    const response = await axios.get(
-      `${process.env.PROJECT_URL}api/ranking/${productID}`,
-    );
+    const response = await axios.get(`${process.env.PROJECT_URL}api/ranking`);
 
     return {
       props: {

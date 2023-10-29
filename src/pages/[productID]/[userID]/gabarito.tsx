@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import React from 'react';
 
 import { Footer } from '@/components/Footer';
@@ -13,8 +13,6 @@ const Gabarito = ({
     user: { name },
   },
 }: any) => {
-  const route = useRouter();
-  const { productID } = route.query;
   return (
     <>
       <Header />
@@ -32,15 +30,12 @@ const Gabarito = ({
                 <p>{`${correctAnswers?.length || 0}/3`}</p>
               </div>
               <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    route.push(`/${productID}/ranking`);
-                  }}
+                <Link
+                  href="/ranking"
                   className="mt-[22px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
                 >
                   Visualizar Ranking
-                </button>
+                </Link>
               </div>
             </div>
           </div>
