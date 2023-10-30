@@ -8,10 +8,11 @@ import { toast } from 'react-toastify';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { Timer } from '@/components/Timer';
 import { questions } from '@/constants/questions';
 
 const Perguntas = ({ product }: { product: Product }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, getValues } = useForm();
   const router = useRouter();
 
   const createAnswer = async (data: any) => {
@@ -64,6 +65,9 @@ const Perguntas = ({ product }: { product: Product }) => {
             </div>
           </div>
           <div>
+            <div className="py-[8px] text-center">
+              <Timer getValues={getValues} productId={product.id} />
+            </div>
             <h1 className="text-center text-[20px]">
               Assinale as alternativas conforme for identificado nas imagens:
             </h1>

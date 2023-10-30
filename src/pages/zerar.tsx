@@ -58,7 +58,7 @@ const Zerar = () => {
               router.push('/');
             }}
           >
-            Zerar Palavaras
+            Zerar Palavras
             {isLoadingWords && (
               <div className="animate-spin">
                 <AiOutlineLoading3Quarters />
