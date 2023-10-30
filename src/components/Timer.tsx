@@ -12,7 +12,7 @@ export const Timer = ({
   getValues: UseFormGetValues<FieldValues>;
   productId: number;
 }) => {
-  const [seconds, setSeconds] = useState(5); // 2 minutos em segundos
+  const [seconds, setSeconds] = useState(2 * 60); // 2 minutos em segundos
   const [isActive, setIsActive] = useState(true);
 
   const createAnswer = async (data: any) => {
