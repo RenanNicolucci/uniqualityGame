@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 import type { FieldValues, UseFormGetValues } from 'react-hook-form';
 import { useMutation } from 'react-query';
@@ -14,6 +15,7 @@ export const Timer = ({
 }) => {
   const [seconds, setSeconds] = useState(2 * 60); // 2 minutos em segundos
   const [isActive, setIsActive] = useState(true);
+  const { t } = useTranslation('common');
 
   const createAnswer = async (data: any) => {
     return axios.post('/api/answers', {
@@ -67,7 +69,7 @@ export const Timer = ({
   return (
     <div>
       <h1 className="text-[16px] font-bold text-[#4056e6]">
-        Seu Tempo: {formatTime(seconds)}
+        {t('seuTempo')}: {formatTime(seconds)}
       </h1>
     </div>
   );

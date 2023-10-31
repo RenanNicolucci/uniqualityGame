@@ -1,6 +1,8 @@
 import axios from 'axios';
 import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React from 'react';
 
 import { Footer } from '@/components/Footer';
@@ -13,20 +15,23 @@ const Gabarito = ({
     user: { name },
   },
 }: any) => {
+  const { t } = useTranslation('common');
   return (
     <>
       <Header />
       <main>
         <div className="m-auto flex w-full flex-col items-center justify-center gap-[32px] p-[32px] md:flex-row md:items-center md:justify-center md:gap-[64px]">
           <div className="min-w-[350px]">
-            <h1 className="text-center text-[20px]">{`${name} seu gabarito:`}</h1>
+            <h1 className="text-center text-[20px]">{`${name} ${t(
+              'seuGabarito',
+            )}:`}</h1>
             <div className="mt-[32px] flex flex-col gap-[16px]">
               <div className="flex w-full items-center justify-between">
-                <p>Sua posição no ranking:</p>
+                <p>{`${t('suaPosicaoNoRanking')}:`}</p>
                 <p>{`${position + 1}º`}</p>
               </div>
               <div className="flex w-full items-center justify-between">
-                <p className="text-[#076607]">Acertou:</p>
+                <p className="text-[#076607]">{`${t('acertou')}:`}</p>
                 <p>{`${correctAnswers?.length || 0}/3`}</p>
               </div>
               <div>
@@ -34,7 +39,7 @@ const Gabarito = ({
                   href="/ranking"
                   className="mt-[22px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
                 >
-                  Visualizar Ranking
+                  {t('visualizarRanking')}
                 </Link>
               </div>
             </div>
@@ -60,6 +65,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       props: {
         data: { ...response.data, correctAnswersByDB: correctAnswers.data },
+        ...(await serverSideTranslations(context.locale || '', ['common'])),
       },
     };
   } catch (error) {

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 import ReactWordcloud from 'react-wordcloud';
 
@@ -9,6 +11,7 @@ import { Header } from '@/components/Header';
 const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
   const [show, setShow] = useState(false);
   const router = useRouter();
+  const { t } = useTranslation();
   const { productID } = router.query;
 
   const names = ['Omo Litro', 'Omo Pacote', 'Cif', 'Comfort'];
@@ -23,6 +26,8 @@ const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
   useEffect(() => {
     setShow(true);
   }, []);
+
+  const translatedData = data.map((item) => ({ ...item, text: t(item.text) }));
 
   return (
     <>
@@ -41,7 +46,7 @@ const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
                 {show && (
                   <ReactWordcloud
                     size={[360, 250]}
-                    words={data}
+                    words={translatedData}
                     // @ts-ignore
                     options={options}
                   />
@@ -67,7 +72,7 @@ const ResultId = ({ data }: { data: { text: string; value: number }[] }) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ locale }: any) {
   try {
     const response = await axios.get(
       `${process.env.PROJECT_URL}api/floatAnswers`,
@@ -81,6 +86,7 @@ export async function getServerSideProps() {
     return {
       props: {
         data: data as { text: string; value: number }[],
+        ...(await serverSideTranslations(locale, ['common'])),
       },
     };
   } catch (error) {

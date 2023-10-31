@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useMutation } from 'react-query';
@@ -15,6 +17,7 @@ const Index = () => {
     formState: { errors },
   } = useForm<{ name: string }>();
   const router = useRouter();
+  const { t } = useTranslation('common');
 
   const createUser = async ({ name }: { name: string }) => {
     return axios.post('/api/user', { name });
@@ -44,7 +47,9 @@ const Index = () => {
       <Header />
       <main>
         <div className="p-[64px]">
-          <h1 className="text-center text-[20px]">Digite seu nome:</h1>
+          <h1 className="text-center text-[20px]">
+            {`${t('digiteSeuNome')}:`}
+          </h1>
           <form
             className="mx-auto mt-[32px] flex max-w-[250px] flex-col items-center gap-[16px] text-[16px]"
             onSubmit={handleSubmit(onSubmit)}
@@ -52,7 +57,7 @@ const Index = () => {
             <div className="flex flex-col gap-[16px]">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor="name" className="mb-[8px]">
-                Nome
+                {t('nome')}
               </label>
               <input
                 id="name"
@@ -74,7 +79,7 @@ const Index = () => {
                 type="submit"
                 className="mt-[32px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
               >
-                Entrar
+                {t('entrar')}
                 {isLoading && (
                   <div className="animate-spin">
                     <AiOutlineLoading3Quarters />
@@ -91,5 +96,13 @@ const Index = () => {
     </>
   );
 };
+
+export async function getStaticProps({ locale }: any) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}
 
 export default Index;

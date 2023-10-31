@@ -1,5 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies, import/extensions */
 import withBundleAnalyzer from '@next/bundle-analyzer';
+import i18next from './next-i18next.config.js';
+
+const { i18n } = i18next;
 
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -27,4 +30,5 @@ export default bundleAnalyzer({
 
     return config;
   },
+  i18n,
 });

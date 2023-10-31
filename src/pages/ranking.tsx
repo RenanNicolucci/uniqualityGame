@@ -1,11 +1,15 @@
 import axios from 'axios';
 import Link from 'next/link';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 
 const Ranking = (data: any) => {
+  const { t } = useTranslation('common');
+
   return (
     <>
       <Header />
@@ -16,9 +20,9 @@ const Ranking = (data: any) => {
             <div className="mt-[32px] flex flex-col gap-[16px]">
               <table>
                 <tr>
-                  <th>Nome</th>
-                  <th>Acertos</th>
-                  <th>Posição</th>
+                  <th>{t('nome')}</th>
+                  <th>{t('acertou')}</th>
+                  <th>{t('posicao')}</th>
                 </tr>
                 {data.data.map((item: any, index: number) => (
                   <tr key={item.user.id}>
@@ -35,7 +39,7 @@ const Ranking = (data: any) => {
                   href="/resultados"
                   className="mt-[22px] flex w-full items-center justify-center gap-[16px] rounded bg-[#1f36c7] p-[8px] px-[22px] font-bold uppercase text-white"
                 >
-                  Visualizar Palavras
+                  {t('visualizarPalavras')}
                 </Link>
               </div>
             </div>
@@ -47,13 +51,14 @@ const Ranking = (data: any) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ locale }: any) {
   try {
     const response = await axios.get(`${process.env.PROJECT_URL}api/ranking`);
 
     return {
       props: {
         data: response.data.sortByRanking,
+        ...(await serverSideTranslations(locale, ['common'])),
       },
     };
   } catch (error) {
