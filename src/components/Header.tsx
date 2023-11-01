@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 export const Header = () => {
   const { push, asPath } = useRouter();
+  const { t } = useTranslation('common');
 
   const hanldeChange = (value: string) => {
     push(asPath, undefined, { locale: value });
@@ -30,9 +32,9 @@ export const Header = () => {
               hanldeChange(e.target.value);
             }}
           >
-            <option value="pt-BR">Português</option>
-            <option value="en-US">Inglês</option>
-            <option value="es">Espanhol</option>
+            <option value="pt-BR">{t('portugues')}</option>
+            <option value="en-US">{t('ingles')}</option>
+            <option value="es">{t('espanhol')}</option>
           </select>
         </div>
       </div>
