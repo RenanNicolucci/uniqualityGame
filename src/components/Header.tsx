@@ -4,6 +4,10 @@ import React from 'react';
 
 export const Header = () => {
   const { push, asPath } = useRouter();
+
+  const hanldeChange = (value: string) => {
+    push(asPath, undefined, { locale: value });
+  };
   return (
     <header>
       <div className="flex items-center  justify-between bg-[#1f36c7]">
@@ -18,33 +22,16 @@ export const Header = () => {
           </div>
         </div>
         <div className="flex items-center pr-[60px] text-[white]">
-          <button
-            onClick={() => {
-              push(asPath, undefined, { locale: 'pt-BR' });
+          <select
+            className="bg-[#141c51] px-[16px] py-[8px]"
+            onChange={(e) => {
+              hanldeChange(e.target.value);
             }}
-            type="button"
-            className="min-w-max bg-[#5769e1] px-[12px] py-[8px]"
           >
-            Português
-          </button>
-          <button
-            onClick={() => {
-              push(asPath, undefined, { locale: 'en-US' });
-            }}
-            type="button"
-            className="min-w-max bg-[#293cb3] px-[12px] py-[8px]"
-          >
-            Inglês
-          </button>
-          <button
-            onClick={() => {
-              push(asPath, undefined, { locale: 'es' });
-            }}
-            type="button"
-            className="min-w-max bg-[#5769e1] px-[12px] py-[8px]"
-          >
-            Espanhol
-          </button>
+            <option value="pt-BR">Português</option>
+            <option value="en-US">Inglês</option>
+            <option value="es">Espanhol</option>
+          </select>
         </div>
       </div>
     </header>
