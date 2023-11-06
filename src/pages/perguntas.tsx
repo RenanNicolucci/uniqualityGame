@@ -125,6 +125,7 @@ export async function getServerSideProps({ locale }: any) {
       },
     };
   } catch (error) {
+    console.log(error);
     return {
       notFound: true,
     };
