@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'DELETE') {
     try {
-      await prisma.floatAnswers.deleteMany({});
+      await prisma.floatAnswers.updateMany({ data: { quantity: 0 } });
 
       return res.status(200).json({
         message: 'Quantidade zerada com sucesso para todas as palavras.',
