@@ -56,11 +56,13 @@ export async function getServerSideProps({ locale, ...context }: any) {
     const userResponse = response.data.sortByRanking.filter(
       (item: any) => item.user.id === parseInt(context.params.userID, 10),
     );
-    const index = response.data.sortByRanking.indexOf(userResponse);
+    const index = response.data.sortByRanking.findIndex(
+      (item: any) => item.user.id === parseInt(context.params.userID, 10),
+    );
 
     return {
       props: {
-        data: { ...userResponse[0], position: index + 1 },
+        data: { ...userResponse[0], position: index },
         ...(await serverSideTranslations(locale, ['common'])),
       },
     };
