@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -51,21 +50,18 @@ const Gabarito = ({
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { productID, userID } = context.query;
-
+export async function getServerSideProps({ locale, ...context }: any) {
   try {
-    const response = await axios.get(
-      `${process.env.PROJECT_URL}api/ranking/${productID}/${userID}`,
+    const response = await axios.get(`${process.env.PROJECT_URL}api/ranking`);
+    const userResponse = response.data.sortByRanking.filter(
+      (item: any) => item.user.id === parseInt(context.params.userID, 10),
     );
-    const correctAnswers = await axios.get(
-      `${process.env.PROJECT_URL}api/answers/correctAnswers/${productID}`,
-    );
+    const index = response.data.sortByRanking.indexOf(userResponse);
 
     return {
       props: {
-        data: { ...response.data, correctAnswersByDB: correctAnswers.data },
-        ...(await serverSideTranslations(context.locale || '', ['common'])),
+        data: { ...userResponse[0], position: index + 1 },
+        ...(await serverSideTranslations(locale, ['common'])),
       },
     };
   } catch (error) {

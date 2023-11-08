@@ -37,7 +37,7 @@ const Perguntas = ({ product }: { product: Product }) => {
       {
         onSuccess: () => {
           localStorage.setItem('product', data);
-          router.push(`${product.id}/${userId}/gabarito/`);
+          router.push(`/${userId}/gabarito/`);
         },
         onError: (err: any) => {
           toast.error(err.response.data.error || 'erro ao enviar respostas!');
